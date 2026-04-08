@@ -5,7 +5,6 @@
 This project implements and compares three motion planning components:
 
 - **Probabilistic Roadmap (PRM)**
-- **Rapidly-exploring Random Tree (RRT)**
 - **Path Post-processing (Shortcutting)**
 
 The goal is to compute collision-free paths for a point robot in a 2D environment with triangular obstacles.
@@ -35,23 +34,9 @@ env.check_collision(x, y)
 
 ---
 
-### 2. Rapidly-exploring Random Tree (RRT)
 
-**Steps:**
-- Start from initial point
-- Sample random points
-- Extend tree toward sample
-- Add node if collision-free
-- Stop when goal is reached
 
-**Characteristics:**
-- Good for single-query problems
-- Handles complex environments well
-- Produces jagged paths
-
----
-
-### 3. Path Post-processing (Shortcutting)
+### 2. Path Post-processing (Shortcutting)
 
 **Goal:** Improve path quality
 
@@ -157,10 +142,73 @@ python post_processing.py
 ### PRM: Environment 1
 
 #### Query 1
-![PRM Environment 1 Query 1](output/prm_env1_q1.png)
+![PRM Environment 1 Query 1](output/prm/prm_env1_q1.png)
 
 #### Query 2
-![PRM Environment 1 Query 2](output/prm_env1_q2.png)
+![PRM Environment 1 Query 2](output/prm/prm_env1_q2.png)
 
 #### Query 3
-![PRM Environment 1 Query 3](output/prm_env1_q3.png)
+![PRM Environment 1 Query 3](output/prm/prm_env1_q3.png)
+
+
+### I - PRM: Environment 2
+
+#### Query 1
+![PRM Environment 2 Query 1](output/prm/prm_env2_q1.png)
+
+#### Query 2
+![PRM Environment 2 Query 2](output/prm/prm_env2_q2.png)
+
+#### Query 3
+![PRM Environment 2 Query 3](output/prm/prm_env2_q3.png)
+
+#### Query 4
+![PRM Environment 2 Query 4](output/prm/prm_env2_q4.png)
+
+### PRM: Environment 3
+
+#### Query 1
+![PRM Environment 2 Query 1](output/prm/prm_env3_q1.png)
+
+#### Query 2
+![PRM Environment 2 Query 2](output/prm/prm_env3_q2.png)
+
+###  II - Post-processing (PRM + shortcut): Environment 1
+
+#### Query 1
+![Post-processing Environment 1 Query 1](output/path_shortcut/prm_env1_q1.png)
+
+#### Query 2
+![Post-processing Environment 1 Query 2](output/path_shortcut/prm_env1_q2.png)
+
+#### Query 3
+![Post-processing Environment 1 Query 3](output/path_shortcut/prm_env1_q3.png)
+
+###  II - Post-processing (PRM + shortcut): Environment 2
+
+#### Query 1
+![Post-processing Environment 2 Query 1](output/path_shortcut/prm_env2_q1.png)
+
+#### Query 2
+![Post-processing Environment 2 Query 2](output/path_shortcut/prm_env2_q2.png)
+
+#### Query 3
+![Post-processing Environment 2 Query 3](output/path_shortcut/prm_env2_q3.png)
+
+#### Query 3
+![Post-processing Environment 2 Query 4](output/path_shortcut/prm_env2_q4.png)
+
+###  II - Post-processing (PRM + shortcut): Environment 3
+
+#### Query 1
+![Post-processing Environment 3 Query 1](output/path_shortcut/prm_env3_q1.png)
+
+#### Query 2
+![Post-processing Environment 3 Query 2](output/path_shortcut/prm_env3_q2.png)
+
+#### Query 3
+![Post-processing Environment 3 Query 3](output/path_shortcut/prm_env3_q3.png)
+
+#### Query 3
+![Post-processing Environment 3 Query 4](output/path_shortcut/prm_env3_q4.png)
+

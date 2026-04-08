@@ -146,41 +146,41 @@ python post_processing.py
 ### PRM: Environment 1
 
 #### Query 1
-![PRM Environment 1 Query 1](output/prm/prm_env1_q1.png)
+![PRM Environment 1 Query 1](catkin_ws/output/prm/prm_env1_q1.png)
 
 #### Query 2
-![PRM Environment 1 Query 2](output/prm/prm_env1_q2.png)
+![PRM Environment 1 Query 2](catkin_ws/output/prm/prm_env1_q2.png)
 
 #### Query 3
-![PRM Environment 1 Query 3](output/prm/prm_env1_q3.png)
+![PRM Environment 1 Query 3](catkin_ws/output/prm/prm_env1_q3.png)
 
 
 ### PRM: Environment 2
 
 #### Query 1
-![PRM Environment 2 Query 1](output/prm/prm_env2_q1.png)
+![PRM Environment 2 Query 1](catkin_ws/output/prm/prm_env2_q1.png)
 
 #### Query 2
-![PRM Environment 2 Query 2](output/prm/prm_env2_q2.png)
+![PRM Environment 2 Query 2](catkin_ws/output/prm/prm_env2_q2.png)
 
 #### Query 3
-![PRM Environment 2 Query 3](output/prm/prm_env2_q3.png)
+![PRM Environment 2 Query 3](catkin_ws/output/prm/prm_env2_q3.png)
 
 #### Query 4
-![PRM Environment 2 Query 4](output/prm/prm_env2_q4.png)
+![PRM Environment 2 Query 4](catkin_ws/output/prm/prm_env2_q4.png)
 
 ### PRM: Environment 3
 
 #### Query 1
-![PRM Environment 2 Query 1](output/prm/prm_env3_q1.png)
+![PRM Environment 2 Query 1](catkin_ws/output/prm/prm_env3_q1.png)
 
 #### Query 2
-![PRM Environment 2 Query 2](output/prm/prm_env3_q2.png)
+![PRM Environment 2 Query 2](catkin_ws/output/prm/prm_env3_q2.png)
 
 ###  II - Post-processing (PRM + shortcut): Environment 1
 
 #### Query 1
-![Post-processing Environment 1 Query 1](output/path_shortcut/prm_env1_q1.png)
+![Post-processing Environment 1 Query 1](catkin_ws/output/path_shortcut/prm_env1_q1.png)
 
 #### Query 2
 ![Post-processing Environment 1 Query 2](output/path_shortcut/prm_env1_q2.png)

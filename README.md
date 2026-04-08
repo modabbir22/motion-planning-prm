@@ -117,7 +117,7 @@ python post_processing.py
 | **Q3** | Length (m) | 17.4832 | 17.4160 |
 | **Q3** | Time (s) | 75.435 s | 2.968 s |
 | **Q4** | Length (m) | No path found | No path found |
-| **Q4** | Time (s) | - | - |
+| **Q4** | Time (s) | 74.993 s | 0.0 s |
 
 **Environment 2:**
 

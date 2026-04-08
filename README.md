@@ -141,6 +141,12 @@ python post_processing.py
 | **Q2** | Length (m) | 11.3623 | 10.9437 |
 | **Q2** | Time (s) | 79.178 s | 1.214 s |
 
+## ⚠️ Limitations
+
+- PRM may fail if the roadmap is not fully connected
+- RRT may fail if the goal is not reached within max iterations
+- Shortcutting depends on accurate collision checking resolution
+
 ## 📈 Visualizations
 
 ### PRM: Environment 1

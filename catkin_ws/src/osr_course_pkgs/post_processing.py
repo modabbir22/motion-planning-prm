@@ -11,7 +11,6 @@ sys.path.append('osr_examples/scripts/')
 import environment_2d
 
 
-
 def dist(p1, p2):
     """Simple Euclidean distance between two points."""
     return ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2) ** 0.5
@@ -120,9 +119,6 @@ def splice_path(path, i1, p1, i2, p2):
     return new_path
 
 
-# Path shortcutting (Part 2)
-
-
 def shortcut_path(env, path, maxrep=100):
     """
     Implements path shortcutting:
@@ -158,10 +154,7 @@ def shortcut_path(env, path, maxrep=100):
     return path
 
 
-# PRM implementation
-
-
-def build_prm(env, num_samples=300,connection_radius=2.0):
+def build_prm(env, num_samples=300, connection_radius=2.0):
     nodes = [random_free_point(env) for _ in range(num_samples)]
     graph = defaultdict(list)
 
@@ -225,89 +218,6 @@ def dijkstra(graph, nodes, start_idx, goal_idx):
     return path
 
 
-
-# RRT implementation
-
-def nearest_node(nodes, q_rand):
-    best_idx = 0
-    best_dist = float('inf')
-
-    for i, node in enumerate(nodes):
-        d = dist(node, q_rand)
-        if d < best_dist:
-            best_dist = d
-            best_idx = i
-
-    return best_idx
-
-
-def steer(q_near, q_rand, step_size):
-    dx = q_rand[0] - q_near[0]
-    dy = q_rand[1] - q_near[1]
-    d = (dx * dx + dy * dy) ** 0.5
-
-    if d == 0:
-        return None
-
-    if d <= step_size:
-        return q_rand
-
-    ux = dx / d
-    uy = dy / d
-    return (q_near[0] + step_size * ux, q_near[1] + step_size * uy)
-
-
-def reconstruct_path(nodes, parents, goal_idx):
-    path = []
-    curr = goal_idx
-    while curr is not None:
-        path.append(nodes[curr])
-        curr = parents[curr]
-    path.reverse()
-    return path
-
-
-def rrt_plan(env, q_start, q_goal, step_size=0.2, max_iters=5000, goal_sample_rate=0.1):
-    nodes = [q_start]
-    parents = {0: None}
-
-    for _ in range(max_iters):
-        if random.random() < goal_sample_rate:
-            q_rand = q_goal
-        else:
-            q_rand = random_free_point(env)
-
-        nearest_idx = nearest_node(nodes, q_rand)
-        q_near = nodes[nearest_idx]
-
-        q_new = steer(q_near, q_rand, step_size)
-        if q_new is None:
-            continue
-
-        if not is_free(env, q_new):
-            continue
-
-        if not collision_free_segment(env, q_near, q_new):
-            continue
-
-        nodes.append(q_new)
-        new_idx = len(nodes) - 1
-        parents[new_idx] = nearest_idx
-
-        if dist(q_new, q_goal) <= step_size:
-            if collision_free_segment(env, q_new, q_goal):
-                nodes.append(q_goal)
-                goal_idx = len(nodes) - 1
-                parents[goal_idx] = new_idx
-                path = reconstruct_path(nodes, parents, goal_idx)
-                return nodes, parents, path
-
-    return nodes, parents, None
-
-
-
-# Plotting
-
 def plot_path_comparison(env, q_start, q_goal, original_path, shortcut_path_result, title="Path Shortcutting"):
     plt.figure(figsize=(8, 5))
     env.plot()
@@ -316,7 +226,7 @@ def plot_path_comparison(env, q_start, q_goal, original_path, shortcut_path_resu
     if original_path is not None:
         ox = [p[0] for p in original_path]
         oy = [p[1] for p in original_path]
-        plt.plot(ox, oy, 'b--', linewidth=2, label='Original path')
+        plt.plot(ox, oy, 'b--', linewidth=2, label='Original PRM path')
         plt.plot(ox, oy, 'bo', markersize=3)
 
     if shortcut_path_result is not None:
@@ -330,8 +240,6 @@ def plot_path_comparison(env, q_start, q_goal, original_path, shortcut_path_resu
     plt.show(block=True)
 
 
-#Manual queries for the environment
-
 manual_queries = [
     ((5.27, 5.62), (5.21, 0.64)),
     ((1.00, 1.00), (9.00, 5.50)),
@@ -339,8 +247,6 @@ manual_queries = [
     ((0.80, 3.00), (7.50, 4.20)),
 ]
 
-
-#Main
 
 random.seed(4)
 np.random.seed(4)
@@ -351,11 +257,6 @@ show_plots = True
 # PRM parameters
 prm_num_samples = 300
 prm_connection_radius = 2.0
-
-# RRT parameters
-rrt_step_size = 0.2
-rrt_max_iters = 5000
-rrt_goal_sample_rate = 0.1
 
 # Shortcutting parameter
 shortcut_iterations = 100
@@ -392,9 +293,10 @@ for env_idx in range(num_environments):
         print(f"QUERY {query_id + 1} IN ENVIRONMENT {env_idx + 1}")
         print("-" * 70)
 
-        # -------------------------
-        # PRM path
-        # -------------------------
+        # PRM path timing
+        
+        t0 = time.perf_counter()
+
         prm_nodes, prm_graph = build_prm(
             env,
             num_samples=prm_num_samples,
@@ -403,20 +305,18 @@ for env_idx in range(num_environments):
         prm_start_idx = connect_query_point(env, prm_nodes, prm_graph, q_start, prm_connection_radius)
         prm_goal_idx = connect_query_point(env, prm_nodes, prm_graph, q_goal, prm_connection_radius)
         prm_path = dijkstra(prm_graph, prm_nodes, prm_start_idx, prm_goal_idx)
-        prm_short = shortcut_path(env, prm_path, maxrep=shortcut_iterations)
 
-        # -------------------------
-        # RRT path
-        # -------------------------
-        rrt_nodes, rrt_parents, rrt_path = rrt_plan(
-            env,
-            q_start,
-            q_goal,
-            step_size=rrt_step_size,
-            max_iters=rrt_max_iters,
-            goal_sample_rate=rrt_goal_sample_rate
-        )
-        rrt_short = shortcut_path(env, rrt_path, maxrep=shortcut_iterations)
+        t1 = time.perf_counter()
+        prm_generation_time = t1 - t0
+
+        # Shortcut timing
+     
+        t2 = time.perf_counter()
+        prm_short = shortcut_path(env, prm_path, maxrep=shortcut_iterations)
+        t3 = time.perf_counter()
+
+        prm_shortcut_time = t3 - t2
+        prm_total_time = prm_generation_time + prm_shortcut_time
 
         print("Start:", q_start)
         print("Goal: ", q_goal)
@@ -424,44 +324,29 @@ for env_idx in range(num_environments):
         print("\nPRM:")
         if prm_path is None:
             print("  No original path found")
+            print(f"  PRM generation time: {prm_generation_time:.6f} seconds")
+            print(f"  Shortcut time:       {prm_shortcut_time:.6f} seconds")
+            print(f"  Total time:          {prm_total_time:.6f} seconds")
         else:
             orig_len = path_length(prm_path)
             short_len = path_length(prm_short)
+
             print(f"  Original path points: {len(prm_path)}")
             print(f"  Original path length: {orig_len:.4f}")
             print(f"  Shortcut path points: {len(prm_short)}")
             print(f"  Shortcut path length: {short_len:.4f}")
             print(f"  Improvement: {orig_len - short_len:.4f}")
 
-        print("\nRRT:")
-        if rrt_path is None:
-            print("  No original path found")
-        else:
-            orig_len = path_length(rrt_path)
-            short_len = path_length(rrt_short)
-            print(f"  Original path points: {len(rrt_path)}")
-            print(f"  Original path length: {orig_len:.4f}")
-            print(f"  Shortcut path points: {len(rrt_short)}")
-            print(f"  Shortcut path length: {short_len:.4f}")
-            print(f"  Improvement: {orig_len - short_len:.4f}")
+            print(f"  PRM generation time: {prm_generation_time:.6f} seconds")
+            print(f"  Shortcut time:       {prm_shortcut_time:.6f} seconds")
+            print(f"  Total time:          {prm_total_time:.6f} seconds")
 
-        if show_plots:
-            if prm_path is not None:
-                plot_path_comparison(
-                    env,
-                    q_start,
-                    q_goal,
-                    prm_path,
-                    prm_short,
-                    title=f"PRM Shortcutting - Env {env_idx + 1}, Query {query_id + 1}"
-                )
-
-            if rrt_path is not None:
-                plot_path_comparison(
-                    env,
-                    q_start,
-                    q_goal,
-                    rrt_path,
-                    rrt_short,
-                    title=f"RRT Shortcutting - Env {env_idx + 1}, Query {query_id + 1}"
-                )
+        if show_plots and prm_path is not None:
+            plot_path_comparison(
+                env,
+                q_start,
+                q_goal,
+                prm_path,
+                prm_short,
+                title=f"PRM Shortcutting - Env {env_idx + 1}, Query {query_id + 1}"
+            )
